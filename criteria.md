@@ -55,41 +55,26 @@ in at least 4 of 5 tries.
 
 ---
 
-## 4. Something about your chunks
+## 4. Chunks are complete thoughts
 
-<!-- YOU WRITE THIS ONE.
-
-     How would you know if your chunks were the right size? Name something
-     countable or observable.
-
-     Examples of the right shape — don't copy these, they should come from
-     what you actually saw in Milestone 3:
-       - "At least 4 of 5 sampled chunks read as a complete thought, with no
-          sentence cut in half at either end."
-       - "No chunk is shorter than 200 characters, since anything below that
-          in my corpus turned out to be a heading with no content under it." -->
-
-
+For at least 4 of my 5 sampled chunks, the chunk contains a complete idea and does not begin or end in the middle of a sentence.
 
 **Why this target:**
+
+The campus_life documents are short posts that usually contain one main topic. A useful chunk should make sense by itself, because the system needs to retrieve it without relying on the chunk before or after it.
+
 
 
 
 ---
 
-## 5. Your choice
+## 5. Answers include the expected information
 
-<!-- YOU WRITE THIS ONE TOO.
-
-     Pick something you actually care about getting right. It could be about
-     speed, about refusals, about a particular kind of question your corpus
-     handles badly, about source attribution being correct rather than merely
-     present — anything, as long as it names a number or an observable
-     outcome. -->
-
-
+For at least 4 of my 5 test questions, the system's answer includes the expected word or short phrase listed in questions.py.
 
 **Why this target:**
+
+Each of my questions has a specific answer in the selected campus_life documents. The expected phrase gives me a simple, repeatable way to check whether the answer included the most important information.
 
 
 
