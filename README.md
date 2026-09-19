@@ -22,26 +22,18 @@
 
 ## What This Does
 
-<!-- Three or four sentences. Which corpus you picked, and the kinds of
-     questions your system answers. Write it for someone who has never seen
-     this repo.
+This project is an unofficial searchable guide to campus life. It uses the `campus_life` corpus, which contains short student-style posts about housing, dining, courses, and university rules. A user can ask questions such as how the housing lottery works, when a dining hall is busiest, or how much work a course requires. The system retrieves relevant documents, answers using those documents, and names the source file it used.
 
      Milestone 5. -->
 
 ## Chunking Strategy
 
-**Chunk size:**
-**Overlap:**
+**Chunk size:** One complete source document per chunk. The campus_life documents are short, ranging from 178 to 549 characters in the starter output.
 
-<!-- What about YOUR documents made you pick these numbers? Short posts and
-     long sectioned guides don't want the same chunking, and "800 seemed
-     reasonable" earns nothing. Point at something you noticed when you read
-     the documents in Milestone 1.
+**Overlap:** 0 characters.
 
-     If you changed your mind partway through, say so and say why. That's worth
-     more than pretending you got it right first time.
+I chose to keep each document as one chunk because the campus_life posts are short and usually focus on one complete topic, such as one course, residence hall, dining hall, or administrative policy. Splitting them into smaller character-based pieces could cut a useful sentence or separate related details. Keeping the full post together lets a retrieved chunk make sense on its own.
 
-     Milestone 3. -->
 
 ## Sample Chunks
 
@@ -52,7 +44,6 @@
      `python app.py chunks -n 5` prints all three for you. Copy them straight
      across.
 
-     Milestone 3. -->
 
 **Chunk 1** — source: `admin_add_drop_deadline.txt#0` — produced by: `chunker.py::split_documents`
 
@@ -144,12 +135,10 @@ I kept the relevance cutoff at `0.6`. My five in-corpus questions had best dista
 
 ## How I Used AI
 
-<!-- Two specific moments. For each: what you asked for, what came back, and
-     what you changed about it.
 
-     "I asked Claude to write the chunking function from my notes. It ignored
-     the overlap, so I added that myself" is the level of detail we're after.
-     "I used AI to help me code" is not.
+**1.** I asked an AI assistant to explain the RAG system, chunking, retrieval distances, and reindexing in nontechnical language. It also helped me turn the documents I read into specific test questions instead ofbroad questions with no clear answer. I used the suggestions to create five questions in `questions.py` and chose short expected phrases that match the source documents.
+
+**2.** I asked an AI assistant how to replace the starter's fixedsize chunking with a strategy that fits the short campus_life posts. It suggested keeping one complete document as one chunk. I added that strategy to `chunker.py`, fixed an indentation issue, reindexed the corpus, and used retrieval results to confirm that the correct housing-lottery document was returned first.
 
      Milestone 5. -->
 
