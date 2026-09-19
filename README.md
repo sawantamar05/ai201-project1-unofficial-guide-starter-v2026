@@ -115,25 +115,32 @@ Laundry costs $1.75 wash, $1.75 dry, app-based. On noise: moderate; the building
 
 **Question:**
 
+How does the housing lottery work for juniors and seniors?
+
 **Answer:**
 
-```
+```text
+For juniors and seniors, the housing lottery orders students by accumulated credit hours first, and ties are broken randomly (admin_housing_lottery.txt).
+
+Sources retrieved: admin_housing_lottery.txt, admin_parking_permits.txt, advising_registration.txt, housing_old_brewhouse.txt, housing_tamsin_court.txt
 ```
 
 **My relevance cutoff:**
 
-<!-- The number you set in config.py, and how you got there.
-
-     You ran five questions your corpus covers and the five in OUT_OF_SCOPE
-     that it clearly doesn't, and wrote down the best distance for each. What
-     did those two groups look like? Where was the gap? Put the actual numbers
-     here — the table below wants all ten rows.
-
-     Milestone 4. -->
+I kept the relevance cutoff at `0.6`. My five in-corpus questions had best distances from `0.184` to `0.368`, while the five unrelated questions had best distances from `0.825` to `0.934`. The cutoff of `0.6` sits in the gap, so it accepts questions the campus_life corpus can answer and refuses questions from unrelated topics.
 
 | Question | In corpus? | Best distance |
-|---|---|---|
-|  |  |  |
+|---|---|---:|
+| How does the housing lottery work for juniors and seniors? | Yes | 0.184 |
+| When are the busiest lunch hours at Pellew Dining Hall? | Yes | 0.257 |
+| What are CS 210 exams based on? | Yes | 0.297 |
+| What are the benefits and drawbacks of living in Morrow House? | Yes | 0.368 |
+| How much time outside class should I expect to spend on ECON 101? | Yes | 0.248 |
+| What is the capital of Mongolia? | No | 0.825 |
+| How do I change the oil in a diesel engine? | No | 0.934 |
+| Who won the 1994 World Cup? | No | 0.886 |
+| What is the recommended dosage of ibuprofen for a headache? | No | 0.844 |
+| How do I write a for loop in Rust? | No | 0.896 |
 
 ## How I Used AI
 
