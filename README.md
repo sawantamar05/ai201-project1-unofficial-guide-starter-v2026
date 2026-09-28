@@ -247,46 +247,79 @@ I also noticed that retrieving five chunks sometimes included loosely related so
 
 **What I changed:**
 
+I changed `TOP_K` in `config.py` from `5` to `3`. This reduced the number of chunks retrieved and sent to Gemini for each question. I did not change the corpus, chunking strategy, embedding model, threshold, or prompt.
+
 **Why I picked it:**
 
-<!-- Connect it to a specific diagnosis above in one sentence. If you can't,
-     you picked a fix because it sounded impressive. -->
+The before run passed every criterion, but the retrieved source lists sometimes contained loosely related documents. For example, the housing-lottery question retrieved parking, advising, and unrelated housing documents. I reduced `TOP_K` to make the context more focused while keeping the closest relevant chunks.
 
 ### Run Log — After
 
-<!-- Same format, same five criteria, three runs each.
-     `python run_eval.py --label after` -->
-
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Chunks are complete thoughts | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 5. Answers include the expected information | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+
+### Real output — after
+
+Produced by `run_eval.py::main` in `results/run_2026-09-27_2004_after.md`. Retrieval used `store.py::search` with `TOP_K = 3`.
+
+**Run 1 answers:**
+
+```text
+How does the housing lottery work for juniors and seniors?
+For juniors and seniors, the housing lottery orders students by accumulated credit hours first, and uses random tie-breaking only when needed.
+
+Source: admin_housing_lottery.txt
+
+When are the busiest lunch hours at Pellew Dining Hall?
+The peak lunch wait times at Pellew Dining Hall are from 11:45 to 12:30.
+
+Source: dining_pellew_dining_hall.txt
+
+What are CS 210 exams based on?
+CS 210 exams are drawn from lecture material rather than the textbook, and they reuse the lab problems.
+
+Source: course_cs_210_exams.txt
+
+What are the benefits and drawbacks of living in Morrow House?
+The benefits of living in Morrow House are that it is the cheapest housing tier by about $900 a year and its single rooms are real singles. The drawbacks are a known damp problem on the ground floor, loud weekends until about 1am, and no enforced quiet hours.
+
+Source: housing_morrow_house.txt
+
+How much time outside class should I expect to spend on ECON 101?
+You should expect to spend 4 hours a week outside of class on ECON 101.
+
+Sources: course_econ_101_workload.txt and course_econ_101.txt
+```
+
+**Gate output:**
+
+```text
+-> gate refused 5 of 5 out-of-scope questions
+```
 
 **Did it help?**
 
-<!-- Say plainly whether it did, and how you know. If it made things worse,
-     say that — a change that backfired, honestly reported, earns full credit
-     and is more interesting than one that worked. What matters is that you can
-     tell.
+Yes, the improvement helped make the retrieved context more focused. All five criteria remained MET at 5/5, so the change did not reduce answer coverage, source attribution, or gate performance. The after run used three chunks instead of five, which removed some unrelated sources: the Morrow House question retrieved only Morrow House documents, and the ECON 101 question retrieved fewer unrelated course documents. The best-distance scores did not change because `TOP_K` changes the number of returned chunks, not the similarity score of the best chunk.
 
      Milestone 4. -->
 
 ## What's Still Broken
 
-<!-- For each criterion still missed after your fix: what you'd do about it,
-     and why you stopped where you did.
-
-     "I ran out of time" is fine if it's true. Pretending nothing is left is
-     not.
+No criteria were missed after the improvement. However, some retrieval results still include at least one loosely related document. For example, the housing-lottery question still retrieved advising and Tamsin Court documents alongside the correct housing-lottery document. If I continued, I would test hybrid search that combines meaning-based search with keyword search, because course names and exact terms may benefit from keyword matching. I stopped here because the project requires one measured improvement, and the reduction from five chunks to three already improved context focus without reducing any criterion score.
 
      Milestone 5. -->
 
 ## What I'd Do Differently
 
-<!-- Knowing what you know now — which of your five criteria would you write
-     differently, and why?
+If I wrote the criteria again, I would make criterion 1 stricter: for all 5 of 5 questions, one of the top three retrieved chunks should contain the answer. My original target of 4 of 5 was measurable, but the before run passed it easily. Requiring the answer in the top three results would better measure whether retrieval is focused rather than only whether the answer appears somewhere in a larger set of results.
+
+## How I Used AI
+
+In Unit 2, I asked an AI assistant to help me compare the before and after evaluation output. It pointed out that the numerical scores stayed the same but that fewer unrelated source files were retrieved after I changed `TOP_K` from 5 to 3. I checked the source lists in both result files myself and used that comparison to explain whether the improvement helped.
 
      Milestone 5. -->
