@@ -24,7 +24,6 @@
 
 This project is an unofficial searchable guide to campus life. It uses the `campus_life` corpus, which contains short student-style posts about housing, dining, courses, and university rules. A user can ask questions such as how the housing lottery works, when a dining hall is busiest, or how much work a course requires. The system retrieves relevant documents, answers using those documents, and names the source file it used.
 
-     Milestone 5. -->
 
 ## Chunking Strategy
 
@@ -43,7 +42,7 @@ I chose to keep each document as one chunk because the campus_life posts are sho
 
      `python app.py chunks -n 5` prints all three for you. Copy them straight
      across.
-
+-->
 
 **Chunk 1** — source: `admin_add_drop_deadline.txt#0` — produced by: `chunker.py::split_documents`
 
@@ -140,11 +139,6 @@ I kept the relevance cutoff at `0.6`. My five in-corpus questions had best dista
 
 **2.** I asked an AI assistant how to replace the starter's fixedsize chunking with a strategy that fits the short campus_life posts. It suggested keeping one complete document as one chunk. I added that strategy to `chunker.py`, fixed an indentation issue, reindexed the corpus, and used retrieval results to confirm that the correct housing-lottery document was returned first.
 
-     Milestone 5. -->
-
-**1.**
-
-**2.**
 
 <!-- ── Stretch features ─────────────────────────────────────────────────────
      Doing one? Say so here BEFORE you start. A feature this README never
@@ -161,23 +155,61 @@ I kept the relevance cutoff at `0.6`. My five in-corpus questions had best dista
 
 ## Run Log — Before
 
-<!-- Your five criteria, three runs each. `python run_eval.py --label before`
-     runs the questions, puts the OUT_OF_SCOPE ones through the gate, and
-     writes it all into results/ for you. Targets come from criteria.md; the
-     verdict column is your call.
+Produced by `run_eval.py::main` in `results/run_2026-09-27_1545_before.md`. Retrieval used `store.py::search`; chunks were produced by `chunker.py::split_documents`.
 
-     Criterion 3 is measured in one deterministic pass rather than three, so
-     the same number goes in all three run columns. That's correct, not lazy.
+**Criteria 1, 2, and 5 — run 1 answers:**
+
+```text
+How does the housing lottery work for juniors and seniors?
+For juniors and seniors, the housing lottery orders students by accumulated credit hours first, with ties broken randomly (admin_housing_lottery.txt).
+
+When are the busiest lunch hours at Pellew Dining Hall?
+The peak wait times at Pellew Dining Hall are from 11:45 to 12:30.
+
+Source: dining_pellew_dining_hall.txt
+
+What are CS 210 exams based on?
+CS 210 exams are drawn from lecture material rather than the textbook (source: course_cs_210_exams.txt and course_cs_210.txt).
+
+What are the benefits and drawbacks of living in Morrow House?
+Based on housing_morrow_house.txt, the benefits of living in Morrow House are that it is in the cheapest housing tier by about $900 a year and the singles are real singles. The drawbacks are a known damp problem on the ground floor, it is loud until about 1am on weekends, and there are no enforced quiet hours.
+
+How much time outside class should I expect to spend on ECON 101?
+You should expect to spend 4 hours a week outside of class on ECON 101.
+
+Sources:
+- course_econ_101_workload.txt
+- course_econ_101.txt
+```
+
+**Criterion 3 — relevance gate output:**
+
+```text
+refused  (best distance 0.825)  What is the capital of Mongolia?
+refused  (best distance 0.934)  How do I change the oil in a diesel engine?
+refused  (best distance 0.886)  Who won the 1994 World Cup?
+refused  (best distance 0.844)  What is the recommended dosage of ibuprofen for a headache?
+refused  (best distance 0.896)  How do I write a for loop in Rust?
+-> gate refused 5 of 5
+```
+
+**Criterion 4 — chunk output:**
+
+```text
+88 chunks total. Showing 5, spread across the corpus.
+Chunk 1 through Chunk 5 above were produced by chunker.py::split_documents.
+Each sampled chunk contains a complete thought without beginning or ending in the middle of a sentence.
+```
 
      Milestone 1. -->
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Chunks are complete thoughts | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 5. Answers include the expected information | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
 
 <!-- Underneath, paste the REAL output for each criterion from one of your
      runs — the actual text your system produced, not a description of it.
@@ -196,29 +228,18 @@ I kept the relevance cutoff at `0.6`. My five in-corpus questions had best dista
 
 | # | Criterion | Verdict | How I decided |
 |---|---|---|---|
-| 1 |  |  |  |
-| 2 |  |  |  |
-| 3 |  |  |  |
-| 4 |  |  |  |
-| 5 |  |  |  |
+| 1 | Retrieved chunks contain the answer | MET | In every run, all five questions retrieved a chunk containing the answer. The correct source document was included for the housing lottery, Pellew Dining Hall, CS 210, Morrow House, and ECON 101 questions. |
+| 2 | Every answer names a source | MET | All five answers in every run named at least one source filename. |
+| 3 | The relevance gate stops out-of-corpus questions | MET | The gate refused all 5 of 5 unrelated questions. This was deterministic, so the same 5/5 result applies to all three run columns. |
+| 4 | Chunks are complete thoughts | MET | All five sampled chunks were complete, readable thoughts and none began or ended in the middle of a sentence. |
+| 5 | Answers include the expected information | MET | All five answers included their expected phrase: credit hours, 11:45, lecture material, cheapest, or 4 hours. |
 
 ## Diagnoses
+No criteria were missed in the before run, so there is no failed pipeline stage to diagnose.
 
-<!-- For each miss: which stage caused it, and how. The stage alone isn't
-     enough — you need the mechanism.
+However, the results suggest that some of my targets were conservative. Criterion 1 required only 4 of 5 questions to retrieve a chunk containing the answer, but all five questions did so in every run. If I wrote this criterion again, I would tighten it to require 5 of 5 questions. I would keep the same measurement method because it was clear and repeatable.
 
-     Not a diagnosis: "Question 3 didn't work."
-     A diagnosis:     "Question 3 asks about laundry costs. The answer is in
-                       one sentence that got split across two chunks, so
-                       neither chunk on its own contains it."
-
-     The five stages: loading → chunking → embedding → retrieval → generation.
-
-     Look for a pattern. If three misses all ask about numbers, that's one
-     problem, not three.
-
-     Missed nothing? Say so, then say honestly whether your targets were set
-     low, and which one you'd tighten and to what.
+I also noticed that retrieving five chunks sometimes included loosely related sources. For example, the housing-lottery question also retrieved parking, advising, and housing documents that were not needed for the answer. This did not cause a missed criterion, but it is a useful observation for the one improvement I will measure next.
 
      Milestone 3. -->
 
